@@ -1,12 +1,13 @@
-from .mapdata import MapData  # noqa: F401
+import datetime
 
 from PyQt5.QtWidgets import QHBoxLayout, QPushButton
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QThreadPool
 
-from utils import to_real_xy
+from utils import to_real_xy, location_service
 from widgets import NWindow
 from config import profile
 
+from .mapdata import MapData  # noqa: F401
 from .mapcanvas import MapCanvas
 from .mapclasses import MapPoint
 
@@ -57,19 +58,60 @@ class Maps(NWindow):
 
         if profile.maps.last_zone:
             self._map.load_map(profile.maps.last_zone)
+            # TODO(rm_you): may not need this anymore?
+            # possibly just use profile.maps.last_zone
+            self.zone_name = profile.maps.last_zone
         else:
             self._map.load_map("west freeport")
+            self.zone_name = 'west freeport'
+
+        # Location sharing
+        self.last_update = datetime.datetime.min
+        self._locserver_conn = location_service.LocationServiceConnection(self)
+        self._locserver_conn.signals.locs_recieved.connect(self.update_locs)
+        self.threadpool = QThreadPool()
+        self.threadpool.start(self._locserver_conn)
 
     def parse(self, timestamp, text):
         if text[:23] == "LOADING, PLEASE WAIT...":
             pass
         if text[:16] == "You have entered":
+            self.zone_name = text[17:-1]
             self.set_title(text[17:-1])
             self._map.load_map(text[17:-1])
         if text[:16] == "Your Location is":
             x, y, z = [float(value) for value in text[17:].strip().split(",")]
             x, y = to_real_xy(x, y)
             self._map.add_player("__you__", timestamp, MapPoint(x=x, y=y, z=z))
+
+            share_payload = {
+                'x': x,
+                'y': y,
+                'z': z,
+                'zone': self.zone_name,
+                'player': profile.name,  # TODO(rm_you): Switch to config?
+                'timestamp': timestamp.isoformat()
+            }
+            # if self.last_update < timestamp - datetime.timedelta(seconds=1):
+            #     self.last_update = timestamp
+            self._locserver_conn.signals.send_loc.emit(share_payload)
+
+    def update_locs(self, locations):
+        # locations = self._locserver_conn.player_locations
+        for zone in locations:
+            if zone != self.zone_name.lower():
+                continue
+            for player in locations[zone]:
+                print("player found: %s" % player)
+                if player == profile.name:  # TODO(rm_you): Switch to config?
+                    print("player is self")
+                    # continue
+                p_data = locations[zone][player]
+                p_timestamp = datetime.datetime.fromisoformat(
+                    p_data.get('timestamp'))
+                p_point = MapPoint(
+                    x=p_data['x'], y=p_data['y'], z=p_data['z'])
+                self._map.add_player(player, p_timestamp, p_point)
 
     # events
     def _toggle_show_poi(self, _):

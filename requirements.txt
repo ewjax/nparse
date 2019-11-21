@@ -1,4 +1,6 @@
-PyQt5>=5.5.0
-gtts>=2.0.1
+PyQt5>=5.15.4
+gtts>=2.2.2
 pyInstaller
 concurrent_log_handler
+websockets
+websocket-client
