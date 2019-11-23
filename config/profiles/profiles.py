@@ -33,6 +33,16 @@ class ProfileMaps:
 
 
 @dataclass
+class ProfileSharing:
+    player_name: str = "ConfigureMe"
+    url: str = "ws://sheeplauncher.net:8424"
+    reconnect_delay: int = 5
+    enabled: bool = False
+    group_key: str = "public"
+    discord_channel: bool = False
+
+
+@dataclass
 class ProfileSpells:
     buff_bar_color: List[int] = field(default_factory=lambda: [40, 122, 169, 255])
     buff_text_color: List[int] = field(default_factory=lambda: [0, 0, 0, 255])
@@ -78,6 +88,7 @@ class Profile:
     name: str = ""  # blank name means profile will not save.
     log_file: str = ""
     maps: ProfileMaps = field(default_factory=lambda: ProfileMaps())
+    sharing: ProfileSharing = field(default_factory=lambda: ProfileSharing())
     spells: ProfileSpells = field(default_factory=lambda: ProfileSpells())
     text: ProfileText = field(default_factory=lambda: ProfileText())
     triggers: ProfileTriggers = field(default_factory=lambda: ProfileTriggers())

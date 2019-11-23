@@ -66,8 +66,7 @@ class Maps(NWindow):
             self.zone_name = 'west freeport'
 
         # Location sharing
-        self.last_update = datetime.datetime.min
-        self._locserver_conn = location_service.LocationServiceConnection(self)
+        self._locserver_conn = location_service.LocationServiceConnection()
         self._locserver_conn.signals.locs_recieved.connect(self.update_locs)
         self.threadpool = QThreadPool()
         self.threadpool.start(self._locserver_conn)
@@ -89,7 +88,7 @@ class Maps(NWindow):
                 'y': y,
                 'z': z,
                 'zone': self.zone_name,
-                'player': profile.name,  # TODO(rm_you): Switch to config?
+                'player': profile.sharing.player_name,
                 'timestamp': timestamp.isoformat()
             }
             # if self.last_update < timestamp - datetime.timedelta(seconds=1):
@@ -97,15 +96,16 @@ class Maps(NWindow):
             self._locserver_conn.signals.send_loc.emit(share_payload)
 
     def update_locs(self, locations):
-        # locations = self._locserver_conn.player_locations
+        # TODO: remove players from zones they have left
         for zone in locations:
+            # TODO: check which *map is loaded*, not character zone
             if zone != self.zone_name.lower():
                 continue
             for player in locations[zone]:
                 print("player found: %s" % player)
-                if player == profile.name:  # TODO(rm_you): Switch to config?
+                if player == profile.sharing.player_name:
                     print("player is self")
-                    # continue
+                    continue
                 p_data = locations[zone][player]
                 p_timestamp = datetime.datetime.fromisoformat(
                     p_data.get('timestamp'))
