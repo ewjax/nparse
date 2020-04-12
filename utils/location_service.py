@@ -29,7 +29,7 @@ class LocationServiceConnection(QRunnable):
 
     @pyqtSlot()
     def run(self):
-        print("Starting connection to locserver host...")
+        print("Starting connection to sharing host...")
         self._socket.run_forever(sslopt={"cert_reqs": ssl.CERT_NONE})
 
     def send_loc(self, loc):

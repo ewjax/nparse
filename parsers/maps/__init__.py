@@ -66,10 +66,10 @@ class Maps(NWindow):
             self.zone_name = 'west freeport'
 
         # Location sharing
-        self._locserver_conn = location_service.LocationServiceConnection()
-        self._locserver_conn.signals.locs_recieved.connect(self.update_locs)
+        self._sharing_conn = location_service.LocationServiceConnection()
+        self._sharing_conn.signals.locs_recieved.connect(self.update_locs)
         self.threadpool = QThreadPool()
-        self.threadpool.start(self._locserver_conn)
+        self.threadpool.start(self._sharing_conn)
 
     def parse(self, timestamp, text):
         if text[:23] == "LOADING, PLEASE WAIT...":
@@ -93,7 +93,7 @@ class Maps(NWindow):
             }
             # if self.last_update < timestamp - datetime.timedelta(seconds=1):
             #     self.last_update = timestamp
-            self._locserver_conn.signals.send_loc.emit(share_payload)
+            self._sharing_conn.signals.send_loc.emit(share_payload)
 
     def update_locs(self, locations):
         for zone in locations:
