@@ -1,7 +1,7 @@
 import datetime
 
 from PyQt5.QtWidgets import QHBoxLayout, QPushButton
-from PyQt5.QtCore import Qt, QThreadPool
+from PyQt5.QtCore import Qt
 
 from utils import to_real_xy, location_service
 from widgets import NWindow
@@ -66,10 +66,7 @@ class Maps(NWindow):
             self.zone_name = 'west freeport'
 
         # Location sharing
-        self._sharing_conn = location_service.LocationServiceConnection()
-        self._sharing_conn.signals.locs_recieved.connect(self.update_locs)
-        self.threadpool = QThreadPool()
-        self.threadpool.start(self._sharing_conn)
+        location_service.start_location_service(self.update_locs)
 
     def parse(self, timestamp, text):
         if text[:23] == "LOADING, PLEASE WAIT...":
@@ -83,17 +80,16 @@ class Maps(NWindow):
             x, y = to_real_xy(x, y)
             self._map.add_player("__you__", timestamp, MapPoint(x=x, y=y, z=z))
 
-            share_payload = {
-                'x': x,
-                'y': y,
-                'z': z,
-                'zone': self.zone_name,
-                'player': profile.sharing.player_name,
-                'timestamp': timestamp.isoformat()
-            }
-            # if self.last_update < timestamp - datetime.timedelta(seconds=1):
-            #     self.last_update = timestamp
-            self._sharing_conn.signals.send_loc.emit(share_payload)
+            if location_service.get_location_service_connection().enabled:
+                share_payload = {
+                    'x': x,
+                    'y': y,
+                    'z': z,
+                    'zone': self._map._data.zone,
+                    'player': profile.sharing.player_name,
+                    'timestamp': timestamp.isoformat()
+                }
+                location_service.SIGNALS.send_loc.emit(share_payload)
 
     def update_locs(self, locations):
         for zone in locations:

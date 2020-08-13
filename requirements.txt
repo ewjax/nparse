@@ -4,3 +4,5 @@ pyInstaller
 concurrent_log_handler
 websockets
 websocket-client
+requests
+websocket
