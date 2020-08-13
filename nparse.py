@@ -35,6 +35,7 @@ from utils import (
     get_version,
     logger,
     is_new_version_available,
+    location_service,
 )
 
 log = logger.get_logger(__name__)
@@ -46,7 +47,7 @@ from config.ui import SettingsWindow
 os.environ["QT_SCALE_FACTOR"] = str(app_config.qt_scale_factor / 100)
 
 # update check
-CURRENT_VERSION: str = "0.6.0"
+CURRENT_VERSION: str = "0.6.0-sharing"
 if app_config.update_check:
     ONLINE_VERSION: str = get_version()
 else:
@@ -115,6 +116,7 @@ class NomnsParse(QApplication):
             if self._log_reader:
                 self._log_reader.deleteLater()
                 self._log_reader = None
+            location_service.stop_location_service()
             self._toggled = False
 
     def _parse(self, new_line: Tuple[datetime.datetime, str]) -> None:

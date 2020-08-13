@@ -109,8 +109,11 @@ class Maps(NWindow):
                     x=p_data['x'], y=p_data['y'], z=p_data['z'])
                 self._map.add_player(player, p_timestamp, p_point)
             # Remove players that aren't in the zone
+            players_to_remove = []
             for player in self._map._data.players:
                 if player not in locations[zone] and player != '__you__':
+                    players_to_remove.append(player)
+                for player in players_to_remove:
                     self._map.remove_player(player)
 
     # events
