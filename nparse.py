@@ -123,12 +123,11 @@ class NomnsParse(QApplication):
             timestamp, text = new_line  # (datetime, text)
             #  don't send parse to non toggled items, except maps.  always parse maps
             profile.parse(timestamp, text)
-            for parser in [
-                parser
-                for parser in self._parsers
-                if profile.__dict__[parser.name].toggled or parser.name == "maps"
-            ]:
-                parser.parse(timestamp, text)
+            for parser in [parser for parser in self._parsers]:
+                if text[:7] == 'toggle_' and text.split()[0][7:] == parser.name:
+                    parser.toggle()
+                if profile.__dict__[parser.name].toggled or parser.name == 'maps':
+                    parser.parse(timestamp, text)
 
     def _log_file_changed(self, log_file: str) -> None:
         self._settings.reject()
