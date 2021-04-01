@@ -6,3 +6,4 @@ websockets
 websocket-client>=0.58.0
 requests
 colorhash
+pathvalidate
