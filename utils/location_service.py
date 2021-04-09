@@ -114,8 +114,16 @@ class LocationServiceConnection(QRunnable):
     def send_loc(self, loc):
         if not self.enabled:
             return
+        group_key = profile.sharing.group_key
+        if profile.sharing.discord_channel:
+            try:
+                group_key = profile.discord.url.split('?')[0].split('/')[-1]
+            except:
+                print("Failed to parse discord channel ID, falling back to "
+                      "configured group_key.")
+
         message = {'type': "location",
-                   'group_key': profile.sharing.group_key,
+                   'group_key': group_key,
                    'location': loc}
         try:
             self._socket.send(json.dumps(message))
