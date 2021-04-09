@@ -154,3 +154,6 @@ class NWindow(QFrame):
     def settings_updated(self):
         self.setStyleSheet(styles.parser_window())
         self.load()
+
+    def shutdown(self):
+        pass

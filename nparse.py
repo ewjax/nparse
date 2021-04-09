@@ -250,6 +250,11 @@ class NomnsParse(QApplication):
                 self._toggle()
 
             location_service.stop_location_service()
+            for parser in self._parsers:
+                try:
+                    parser.shutdown()
+                except:
+                    print("Failed to shutdown parser: %s" % parser.name)
 
             # save parser geometry
             self.save_geometry()

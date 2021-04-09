@@ -40,6 +40,12 @@ class Discord(NWindow):
         self.url = profile.discord.url
         self._setup_webview()
 
+    def shutdown(self):
+        if self.settings_dialog:
+            self.settings_dialog.destroy()
+        if self.overlay:
+            self.overlay.destroy()
+
     def _applyTweaks(self):
         if self.overlay:
             js = JS_ADD_CSS_TEMPLATE % {'name': 'smalleravatar',
