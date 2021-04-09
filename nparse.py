@@ -47,7 +47,7 @@ from config.ui import SettingsWindow
 os.environ["QT_SCALE_FACTOR"] = str(app_config.qt_scale_factor / 100)
 
 # update check
-CURRENT_VERSION: str = "0.6.0-sharing4"
+CURRENT_VERSION: str = "0.6.0-sharing5"
 if app_config.update_check:
     ONLINE_VERSION: str = get_version()
 else:
@@ -92,6 +92,7 @@ class NomnsParse(QApplication):
         self._parsers = [
             parsers.Maps(),
             parsers.Spells(),
+            parsers.Discord(),
             parsers.Triggers(text_parser=text_parser),
             text_parser,
         ]

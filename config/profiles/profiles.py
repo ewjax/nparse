@@ -67,6 +67,13 @@ class ProfileSpells:
 
 
 @dataclass
+class ProfileDiscord:
+    toggled: bool = False
+    geometry: List[int] = field(default_factory=lambda: [0, 301, 200, 500])
+    url: str = ""
+
+
+@dataclass
 class ProfileText:
     direction: str = "down"
     fade_seconds: int = 10
@@ -90,6 +97,7 @@ class Profile:
     maps: ProfileMaps = field(default_factory=lambda: ProfileMaps())
     sharing: ProfileSharing = field(default_factory=lambda: ProfileSharing())
     spells: ProfileSpells = field(default_factory=lambda: ProfileSpells())
+    discord: ProfileDiscord = field(default_factory=lambda: ProfileDiscord())
     text: ProfileText = field(default_factory=lambda: ProfileText())
     triggers: ProfileTriggers = field(default_factory=lambda: ProfileTriggers())
     trigger_choices: List[TriggerChoice] = field(default_factory=lambda: [])
@@ -143,7 +151,7 @@ class Profile:
             if k in ref:
                 if isinstance(
                     ref[k], (ProfileMaps, ProfileSpells, ProfileSharing,
-                             ProfileText, ProfileTriggers)
+                             ProfileText, ProfileTriggers, ProfileDiscord)
                 ):
                     self.update(v, ref[k].__dict__)
                 else:
