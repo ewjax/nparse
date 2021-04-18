@@ -23,10 +23,13 @@ class LogReader(QFileSystemWatcher):
     def __init__(self, log_dir: str) -> None:
         super().__init__()
 
+        self._log_dir = log_dir
         self._files = glob(os.path.join(log_dir, "eqlog*.txt"))
         self._files_last_read = self._get_all_last_read()
         self._watcher = QFileSystemWatcher(self._files)
         self._watcher.fileChanged.connect(self._file_changed)
+        self._dir_watcher = QFileSystemWatcher([log_dir])
+        self._dir_watcher.directoryChanged.connect(self._dir_changed)
 
         self._stats = LogStats()
 
@@ -40,6 +43,15 @@ class LogReader(QFileSystemWatcher):
                 log.seek(0, os.SEEK_END)
                 d[file] = log.tell()
         return d
+
+    def _dir_changed(self, changed_dir):
+        print("Directory '%s' updated, refreshing file list..." % changed_dir)
+        new_files = glob(os.path.join(self._log_dir, 'eqlog*.txt'))
+        if new_files != self._files:
+            updated_files = set(new_files) - set(self._files)
+            self._watcher.addPaths(updated_files)
+            self._files = new_files
+            self._files_last_read = self._get_all_last_read()
 
     def _file_changed(self, changed_file: str) -> None:
         if changed_file != self._stats.log_file or not self._stats:
