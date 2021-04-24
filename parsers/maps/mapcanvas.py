@@ -6,12 +6,14 @@ from PyQt5.QtGui import QPainter, QTransform, QColor, QPen
 from PyQt5.QtWidgets import (QGraphicsScene, QGraphicsView, QInputDialog,
                              QMenu, QLineEdit, QAction, QGraphicsPathItem)
 
-from utils import to_range, text_time_to_seconds, get_line_length
+from utils import to_range, text_time_to_seconds, get_line_length, logger
 from config import profile
 
 from .mapclasses import (MapPoint, WayPoint, Player, SpawnPoint, MouseLocation,
                          PointOfInterest, MapLine)
 from .mapdata import MapData, MAP_FILES_PATHLIB
+
+LOG = logger.get_logger(__name__)
 
 
 class MapCanvas(QGraphicsView):
@@ -434,14 +436,14 @@ class MapCanvas(QGraphicsView):
         record_dir = MAP_FILES_PATHLIB.joinpath('recordings')
         if not os.path.exists(record_dir):
             try:
-                print("Creating custom map directory.")
+                LOG.debug("Creating custom map directory.")
                 os.makedirs(record_dir)
             except Exception as e:
-                print("Failed to make custom map directory: %s" % e)
+                LOG.debug("Failed to make custom map directory" % e)
         return record_dir.joinpath(filename)
 
     def start_path_recording(self, name=None):
-        print("Start recording!")
+        LOG.debug("Start recording!")
         if self._path_recording:
             return
 
@@ -462,10 +464,11 @@ class MapCanvas(QGraphicsView):
                 self._path_recording = True
                 self._path_last_loc = None
             except Exception as e:
-                print("Failed to open pathfile: %s" % e)
+                LOG.exception(
+                    "Failed to open pathfile: %s" % self._path_recording_name)
 
     def rename_path_recording(self, new_name=None):
-        print("Rename recording!")
+        LOG.debug("Rename recording!")
         if not self._path_recording:
             return
 
@@ -487,20 +490,24 @@ class MapCanvas(QGraphicsView):
                 self._path_file.close()
                 self._path_file = None
             except Exception as e:
-                print("Failed to close path recording file: %s" % e)
+                LOG.exception(
+                    "Failed to close path recording file: %s" % old_path_name)
                 return
             try:
                 os.rename(self._get_path_filename(custom_name=old_path_name),
                           self._get_path_filename(custom_name=new_path_name))
                 self._path_recording_name = new_path_name
             except Exception as e:
-                print("Failed to rename path recording file: %s" % e)
+                LOG.exception(
+                    "Failed to rename path recording file: %s -> %s"
+                    % (old_path_name, new_path_name))
                 self._path_recording = False
                 return
             try:
                 self._path_file = open(self._get_path_filename(), 'a')
             except Exception as e:
-                print("Failed to open renamed path recording file: %s" % e)
+                LOG.exception(
+                    "Failed to open renamed path recording file: %s" % new_path_name)
                 self._path_recording = False
                 return
 
@@ -520,19 +527,19 @@ class MapCanvas(QGraphicsView):
         # dialog.deleteLater()
 
     def stop_path_recording(self):
-        print("Stop recording!")
+        LOG.debug("Stop recording!")
         if not self._path_recording:
             return
 
         if self._path_last_loc is not None:
-            print("Recording final path point.")
+            LOG.debug("Recording final path point.")
             self.record_path_point(
                 self._path_last_loc, "%s (end)" % self._path_recording_name)
 
         try:
             self._path_file.close()
         except Exception as e:
-            print("Failed to stop recording: %s" % e)
+            LOG.exception("Failed to stop recording.")
             return
         self._path_file = None
         self._path_recording = False
@@ -542,9 +549,9 @@ class MapCanvas(QGraphicsView):
         if not self._path_recording:
             return
 
-        print("Recording loc: %s" % str(loc))
+        LOG.debug("Recording loc: %s" % str(loc))
         if self._path_last_loc is None:
-            print("Recording first path point.")
+            LOG.debug("Recording first path point.")
             self.record_path_point(
                 loc, "%s (start)" % self._path_recording_name)
         else:
@@ -560,7 +567,8 @@ class MapCanvas(QGraphicsView):
                 self._path_file.write(line)
                 self._path_file.flush()
             except Exception as e:
-                print("Failed to write loc to pathfile: %s" % e)
+                LOG.exception(
+                    "Failed to write loc to pathfile: %s" % self._path_recording_name)
 
             # Also add line to the active map
             z_group = self._data.get_closest_z_group(loc[2])
@@ -590,7 +598,8 @@ class MapCanvas(QGraphicsView):
             self._path_file.write(point)
             self._path_file.flush()
         except Exception as e:
-            print("Failed to write point to pathfile: %s" % e)
+            LOG.exception(
+                "Failed to write point to pathfile: %s" % self._path_recording_name)
 
         # Also add point to the active map
         z_group = self._data.get_closest_z_group(loc[2])

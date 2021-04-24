@@ -6,9 +6,11 @@ from PyQt5.QtGui import QColor, QPen, QPainterPath
 from PyQt5.QtWidgets import QGraphicsPathItem, QGraphicsItemGroup
 
 from config import profile
+from utils import logger
 
 from .mapclasses import MapPoint, MapGeometry, MapLine, PointOfInterest
 
+LOG = logger.get_logger(__name__)
 MAP_KEY_FILE = "data/maps/map_keys.ini"
 MAP_FILES_LOCATION = "data/maps/map_files"
 MAP_FILES_PATHLIB = pathlib.Path(MAP_FILES_LOCATION)
@@ -39,7 +41,7 @@ class MapData(dict):
         # TODO: Remove the references to raw
         # Create Lines and Points
         for map_file in maps:
-            print("Loading: %s" % map_file)
+            LOG.debug("Loading: %s" % map_file)
             with open(map_file, "r") as f:
                 for line in f.readlines():
                     line_type = line.lower()[0:1]

@@ -38,7 +38,7 @@ from utils import (
     location_service,
 )
 
-log = logger.get_logger(__name__)
+LOG = logger.get_logger(__name__)
 
 from config.ui import SettingsWindow
 
@@ -47,7 +47,7 @@ from config.ui import SettingsWindow
 os.environ["QT_SCALE_FACTOR"] = str(app_config.qt_scale_factor / 100)
 
 # update check
-CURRENT_VERSION: str = "0.6.0-sharing5"
+CURRENT_VERSION: str = "1.0.0-rc1"
 if app_config.update_check:
     ONLINE_VERSION: str = get_version()
 else:
@@ -104,7 +104,7 @@ class NomnsParse(QApplication):
             try:
                 app_config.verify_paths()
             except ValueError as error:
-                log.warning(error, exc_info=True)
+                LOG.warning(error, exc_info=True)
                 self._system_tray.showMessage(error.args[0], error.args[1], msecs=3000)
             else:
                 self._log_reader = logreader.LogReader(
@@ -210,7 +210,6 @@ class NomnsParse(QApplication):
         )
 
         # check online for new version
-        new_version_text = ""
         if is_new_version_available(ONLINE_VERSION, CURRENT_VERSION):
             new_version_text = "Update Available {}".format(ONLINE_VERSION)
         else:
@@ -259,7 +258,7 @@ class NomnsParse(QApplication):
                 try:
                     parser.shutdown()
                 except:
-                    print("Failed to shutdown parser: %s" % parser.name)
+                    LOG.exception("Failed to shutdown parser: %s" % parser.name)
 
             # save parser geometry
             self.save_geometry()
@@ -289,7 +288,7 @@ if __name__ == "__main__":
         APPID = "nomns.nparse"
         ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(APPID)
     except Exception as error:
-        log.error(error, exc_info=True)
+        LOG.exception(error)
     try:
         QApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
         APP = NomnsParse(sys.argv)
@@ -301,4 +300,4 @@ if __name__ == "__main__":
         QFontDatabase.addApplicationFont(resource_path("data/fonts/NotoSans-Bold.ttf"))
         sys.exit(APP.exec())
     except Exception as error:
-        log.error(error, exc_info=True)
+        LOG.exception(error)

@@ -6,7 +6,9 @@ from dataclasses import dataclass
 from PyQt5.QtCore import QFileSystemWatcher, pyqtSignal
 
 from config import app_config
-from utils import strip_timestamp
+from utils import strip_timestamp, logger
+
+LOG = logger.get_logger(__name__)
 
 
 @dataclass
@@ -45,7 +47,7 @@ class LogReader(QFileSystemWatcher):
         return d
 
     def _dir_changed(self, changed_dir):
-        print("Directory '%s' updated, refreshing file list..." % changed_dir)
+        LOG.debug("Directory '%s' updated, refreshing file list..." % changed_dir)
         new_files = glob(os.path.join(self._log_dir, 'eqlog*.txt'))
         if new_files != self._files:
             updated_files = set(new_files) - set(self._files)
@@ -78,3 +80,4 @@ class LogReader(QFileSystemWatcher):
                 # TODO: update this to safely read these lines
                 log.seek(0, os.SEEK_END)
                 self._stats.last_read = log.tell()
+                LOG.exception("Could not read line(s)?")

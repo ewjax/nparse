@@ -1,5 +1,4 @@
 import json
-import logging
 import ssl
 import time
 
@@ -8,13 +7,9 @@ from PyQt5.QtCore import QThreadPool
 import websocket
 
 from config import profile
+from utils import logger
 
-logger = logging.getLogger(__name__)
-hdlr = logging.FileHandler('nparse_loc.log')
-formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
-hdlr.setFormatter(formatter)
-logger.addHandler(hdlr)
-logger.setLevel(logging.WARNING)
+LOG = logger.get_logger(__name__)
 
 
 class LocationSignals(QObject):
@@ -80,20 +75,20 @@ class LocationServiceConnection(QRunnable):
 
     def configure_socket(self):
         if self._socket:
-            print("Resetting socket, killing any open connection...")
+            LOG.info("Resetting socket, killing any open connection...")
             try:
                 self._socket.close()
             except AttributeError:
                 pass
             self._socket = None
         if self.host and self.enabled:
-            print("Host set and sharing enabled, connecting...")
+            LOG.info("Host set and sharing enabled, connecting...")
             self._socket = websocket.WebSocketApp(
                 self.host, on_message=self._on_message,
                 on_error=self._on_error, on_close=self._on_close,
                 on_open=self._on_open)
         else:
-            print("Sharing disabled.")
+            LOG.info("Sharing disabled.")
 
     @pyqtSlot()
     def run(self):
@@ -101,13 +96,13 @@ class LocationServiceConnection(QRunnable):
             try:
                 self.configure_socket()
             except:
-                print("Failed to configure socket!")
+                LOG.exception("Failed to configure socket!")
             if self.enabled:
-                print("Starting connection to sharing host...")
+                LOG.info("Starting connection to sharing host...")
                 try:
                     self._socket.run_forever(sslopt={"cert_reqs": ssl.CERT_NONE})
                 except:
-                    print("Socket connection brokem continuing...")
+                    LOG.warning("Socket connection broken, continuing...")
             if RUN:
                 time.sleep(self.reconnect_delay)
 
@@ -119,8 +114,8 @@ class LocationServiceConnection(QRunnable):
             try:
                 group_key = profile.discord.url.split('?')[0].split('/')[-1]
             except:
-                print("Failed to parse discord channel ID, falling back to "
-                      "configured group_key.")
+                LOG.warning("Failed to parse discord channel ID, "
+                            "falling back to configured group_key.")
 
         message = {'type': "location",
                    'group_key': group_key,
@@ -128,19 +123,19 @@ class LocationServiceConnection(QRunnable):
         try:
             self._socket.send(json.dumps(message))
         except:
-            print("Unable to send location to server.")
+            LOG.exception("Unable to send location to server.")
 
     def _on_message(self, ws, message):
         message = json.loads(message)
         if message['type'] == "state":
-            print("Message received: %s" % message)
+            LOG.debug("Message received: %s" % message)
             SIGNALS.locs_recieved.emit(message['locations'])
 
     def _on_error(self, ws, error):
-        print("Connection error: %s" % error)
+        LOG.error("Connection error: %s" % error)
 
     def _on_open(self, ws):
-        print("Connection opened.")
+        LOG.info("Connection opened.")
 
     def _on_close(self, ws):
-        print("Connection closed.")
+        LOG.info("Connection closed.")

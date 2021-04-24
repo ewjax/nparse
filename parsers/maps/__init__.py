@@ -3,13 +3,15 @@ import datetime
 from PyQt5.QtWidgets import QHBoxLayout, QPushButton
 from PyQt5.QtCore import Qt
 
-from utils import to_real_xy, location_service
+from utils import logger, to_real_xy, location_service
 from widgets import NWindow
 from config import profile
 
 from .mapdata import MapData  # noqa: F401
 from .mapcanvas import MapCanvas
 from .mapclasses import MapPoint
+
+LOG = logger.get_logger(__name__)
 
 
 class Maps(NWindow):
@@ -111,9 +113,9 @@ class Maps(NWindow):
                 continue
             # Add players in the zone
             for player in locations[zone]:
-                print("player found: %s" % player)
+                LOG.debug("player found: %s" % player)
                 if player == profile.sharing.player_name.capitalize():
-                    print("player is self")
+                    LOG.debug("player is self")
                     continue
                 p_data = locations[zone][player]
                 p_timestamp = datetime.datetime.fromisoformat(
