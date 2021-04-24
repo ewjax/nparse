@@ -126,8 +126,8 @@ class Maps(NWindow):
             for player in self._map._data.players:
                 if player not in locations[zone] and player != '__you__':
                     players_to_remove.append(player)
-                for player in players_to_remove:
-                    self._map.remove_player(player)
+            for player in players_to_remove:
+                self._map.remove_player(player)
 
     # events
     def _toggle_show_poi(self, _):
