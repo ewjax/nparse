@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>498</width>
+    <width>527</width>
     <height>565</height>
    </rect>
   </property>
@@ -181,112 +181,106 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_2">
+     <widget class="QWidget" name="tab_10">
       <property name="autoFillBackground">
        <bool>true</bool>
       </property>
       <attribute name="title">
-       <string>Text to Speech</string>
+       <string>Sharing</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_18">
+      <layout class="QVBoxLayout" name="verticalLayout_28">
        <item>
-        <widget class="QGroupBox" name="groupBox_13">
+        <widget class="QGroupBox" name="horizontalGroupBox">
          <property name="title">
-          <string>Manage</string>
+          <string>General</string>
          </property>
-         <layout class="QVBoxLayout" name="verticalLayout_20">
+         <layout class="QHBoxLayout" name="horizontalLayout_16">
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_12">
-            <item>
-             <widget class="QComboBox" name="ttsFileCombo"/>
-            </item>
-            <item>
-             <widget class="QToolButton" name="ttsPlayButton">
+           <layout class="QFormLayout" name="formLayout_2">
+            <item row="0" column="0">
+             <widget class="QLabel" name="enableSharingLabel">
               <property name="text">
-               <string>Play</string>
+               <string>Enable Sharing</string>
               </property>
              </widget>
             </item>
-            <item>
-             <widget class="QToolButton" name="ttsRefreshButton">
+            <item row="0" column="1">
+             <widget class="QCheckBox" name="enableSharingCheckbox">
               <property name="text">
-               <string>Refresh</string>
+               <string/>
               </property>
              </widget>
             </item>
-            <item>
-             <widget class="QToolButton" name="ttsDeleteButton">
+            <item row="1" column="0">
+             <widget class="QLabel" name="displayNameLabel">
               <property name="text">
-               <string>Delete</string>
+               <string>Display Name</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QLineEdit" name="displayNameEditor"/>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="sharingHostnameLabel">
+              <property name="text">
+               <string>Sharing Hostname</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QLineEdit" name="sharingHostnameEditor"/>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="groupKeyLabel">
+              <property name="text">
+               <string>Group Key</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QLineEdit" name="groupKeyEditor"/>
+            </item>
+            <item row="4" column="0">
+             <widget class="QLabel" name="useDiscordChannelLabel">
+              <property name="text">
+               <string>Use Discord Channel</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="1">
+             <widget class="QCheckBox" name="useDiscordChannelCheckbox">
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="0">
+             <widget class="QLabel" name="reconnectDelayLabel">
+              <property name="text">
+               <string>ReconnectDelay</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="1">
+             <widget class="QSpinBox" name="reconnectDelaySpinbox">
+              <property name="suffix">
+               <string> second(s)</string>
+              </property>
+              <property name="minimum">
+               <number>1</number>
+              </property>
+              <property name="maximum">
+               <number>300</number>
+              </property>
+              <property name="value">
+               <number>5</number>
               </property>
              </widget>
             </item>
            </layout>
           </item>
          </layout>
-        </widget>
-       </item>
-       <item>
-        <widget class="QGroupBox" name="groupBox_12">
-         <property name="title">
-          <string>Creates TTS mp3 files in data/tts/ so you can add them to triggers.</string>
-         </property>
-         <layout class="QVBoxLayout" name="verticalLayout_19">
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_11">
-            <item>
-             <widget class="QLabel" name="label_3">
-              <property name="text">
-               <string>Text </string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="ttsTextLineEdit"/>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <widget class="QPushButton" name="ttsCreateButton">
-            <property name="text">
-             <string>Create</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <spacer name="verticalSpacer_2">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="tab_3">
-      <property name="autoFillBackground">
-       <bool>true</bool>
-      </property>
-      <attribute name="title">
-       <string>Profiles</string>
-      </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_3">
-       <item>
-        <widget class="QLabel" name="label_6">
-         <property name="text">
-          <string>In progress.</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
-         </property>
         </widget>
        </item>
       </layout>
@@ -751,7 +745,7 @@
                    <item>
                     <widget class="QLabel" name="spellsYouTargetLabel">
                      <property name="autoFillBackground">
-                      <bool>true</bool>
+                      <bool>false</bool>
                      </property>
                      <property name="styleSheet">
                       <string notr="true">padding: 5px</string>
@@ -775,7 +769,7 @@
                    <item>
                     <widget class="QLabel" name="spellsFriendlyTargetLabel">
                      <property name="autoFillBackground">
-                      <bool>true</bool>
+                      <bool>false</bool>
                      </property>
                      <property name="styleSheet">
                       <string notr="true">padding: 5px</string>
@@ -799,7 +793,7 @@
                    <item>
                     <widget class="QLabel" name="spellsEnemyTargetLabel">
                      <property name="autoFillBackground">
-                      <bool>true</bool>
+                      <bool>false</bool>
                      </property>
                      <property name="styleSheet">
                       <string notr="true">padding: 5px</string>
@@ -831,7 +825,7 @@
               <item>
                <widget class="QLabel" name="spellsBuffBarLabel">
                 <property name="autoFillBackground">
-                 <bool>true</bool>
+                 <bool>false</bool>
                 </property>
                 <property name="styleSheet">
                  <string notr="true">padding: 5px</string>
@@ -862,7 +856,7 @@
               <item>
                <widget class="QLabel" name="spellsDebuffBarLabel">
                 <property name="autoFillBackground">
-                 <bool>true</bool>
+                 <bool>false</bool>
                 </property>
                 <property name="styleSheet">
                  <string notr="true">padding: 5px</string>
@@ -1074,6 +1068,96 @@
        </item>
       </layout>
      </widget>
+     <widget class="QWidget" name="tab_2">
+      <property name="autoFillBackground">
+       <bool>true</bool>
+      </property>
+      <attribute name="title">
+       <string>Text to Speech</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_18">
+       <item>
+        <widget class="QGroupBox" name="groupBox_13">
+         <property name="title">
+          <string>Manage</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_20">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_12">
+            <item>
+             <widget class="QComboBox" name="ttsFileCombo"/>
+            </item>
+            <item>
+             <widget class="QToolButton" name="ttsPlayButton">
+              <property name="text">
+               <string>Play</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QToolButton" name="ttsRefreshButton">
+              <property name="text">
+               <string>Refresh</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QToolButton" name="ttsDeleteButton">
+              <property name="text">
+               <string>Delete</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_12">
+         <property name="title">
+          <string>Creates TTS mp3 files in data/tts/ so you can add them to triggers.</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_19">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_11">
+            <item>
+             <widget class="QLabel" name="label_3">
+              <property name="text">
+               <string>Text </string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="ttsTextLineEdit"/>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QPushButton" name="ttsCreateButton">
+            <property name="text">
+             <string>Create</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
      <widget class="QWidget" name="tab_9">
       <property name="autoFillBackground">
        <bool>true</bool>
@@ -1088,6 +1172,26 @@
           <number>0</number>
          </property>
         </layout>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_3">
+      <property name="autoFillBackground">
+       <bool>true</bool>
+      </property>
+      <attribute name="title">
+       <string>Profiles</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <widget class="QLabel" name="label_6">
+         <property name="text">
+          <string>In progress.</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -1411,6 +1515,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>useDiscordChannelCheckbox</sender>
+   <signal>clicked()</signal>
+   <receiver>Dialog</receiver>
+   <slot>sharingUseDiscordChannelChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>478</x>
+     <y>55</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>273</x>
+     <y>244</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>textShadowColorButtonClicked()</slot>
@@ -1430,5 +1550,6 @@
   <slot>ttsRefreshButtonClicked()</slot>
   <slot>ttsDeleteButtonClicked()</slot>
   <slot>ttsCreateButtonClicked()</slot>
+  <slot>sharingUseDiscordChannelChanged()</slot>
  </slots>
 </ui>

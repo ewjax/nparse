@@ -99,7 +99,7 @@ class Maps(NWindow):
             # Add players in the zone
             for player in locations[zone]:
                 print("player found: %s" % player)
-                if player == profile.sharing.player_name:
+                if player == profile.sharing.player_name.capitalize():
                     print("player is self")
                     continue
                 p_data = locations[zone][player]

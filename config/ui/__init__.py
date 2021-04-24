@@ -5,7 +5,8 @@ from PyQt5.QtGui import QColor, QPalette
 import os
 from glob import glob
 
-from utils import resource_path, set_qcolor, get_rgb, sound, create_tts_mp3, mp3_to_data
+from utils import (resource_path, set_qcolor, get_rgb, sound, create_tts_mp3,
+                   mp3_to_data, location_service)
 from config import profile, app_config, trigger_manager
 
 from .triggertree import TriggerTree
@@ -132,6 +133,9 @@ class SettingsWindow(QDialog):
             ),
         )
 
+    def sharingUseDiscordChannelChanged(self, value) -> None:
+        self.groupKeyEditor.setDisabled(value)
+
     def _get_color(self, rgba: list = None) -> QColor:
         color = QColorDialog.getColor(
             QColor(*rgba), self, "Choose a Color", QColorDialog.ShowAlphaChannel
@@ -196,6 +200,18 @@ class SettingsWindow(QDialog):
         profile.spells.target_text_color = get_rgb(
             self.spellsEnemyTargetLabel, QPalette.Foreground
         )
+
+        # Sharing
+        sharing_was_enabled = profile.sharing.enabled
+        profile.sharing.enabled = self.enableSharingCheckbox.isChecked()
+        if profile.sharing.enabled != sharing_was_enabled:
+            location_service.SIGNALS.config_updated.emit()
+
+        profile.sharing.player_name = self.displayNameEditor.text()
+        profile.sharing.url = self.sharingHostnameEditor.text()
+        profile.sharing.group_key = self.groupKeyEditor.text()
+        profile.sharing.discord_channel = self.useDiscordChannelCheckbox.isChecked()
+        profile.sharing.reconnect_delay = self.reconnectDelaySpinbox.value()
 
         # Text
 
@@ -278,6 +294,15 @@ class SettingsWindow(QDialog):
             foreground=QColor(*profile.spells.target_text_color),
             background=QColor(*profile.spells.enemy_target_color),
         )
+
+        # Sharing
+        self.enableSharingCheckbox.setChecked(profile.sharing.enabled)
+        self.displayNameEditor.setText(profile.sharing.player_name)
+        self.sharingHostnameEditor.setText(profile.sharing.url)
+        self.groupKeyEditor.setText(profile.sharing.group_key)
+        self.groupKeyEditor.setDisabled(profile.sharing.discord_channel)
+        self.useDiscordChannelCheckbox.setChecked(profile.sharing.discord_channel)
+        self.reconnectDelaySpinbox.setValue(profile.sharing.reconnect_delay)
 
         # Text
 

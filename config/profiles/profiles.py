@@ -142,7 +142,8 @@ class Profile:
         for k, v in dictionary.items():
             if k in ref:
                 if isinstance(
-                    ref[k], (ProfileMaps, ProfileSpells, ProfileText, ProfileTriggers)
+                    ref[k], (ProfileMaps, ProfileSpells, ProfileSharing,
+                             ProfileText, ProfileTriggers)
                 ):
                     self.update(v, ref[k].__dict__)
                 else:

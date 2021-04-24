@@ -116,7 +116,6 @@ class NomnsParse(QApplication):
             if self._log_reader:
                 self._log_reader.deleteLater()
                 self._log_reader = None
-            location_service.stop_location_service()
             self._toggled = False
 
     def _parse(self, new_line: Tuple[datetime.datetime, str]) -> None:
@@ -249,6 +248,8 @@ class NomnsParse(QApplication):
         elif action == quit_action:
             if self._toggled:
                 self._toggle()
+
+            location_service.stop_location_service()
 
             # save parser geometry
             self.save_geometry()

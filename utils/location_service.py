@@ -109,7 +109,7 @@ class LocationServiceConnection(QRunnable):
         if not self.enabled:
             return
         message = {'type': "location",
-                   'group_key': config.data['sharing']['group_key'],
+                   'group_key': profile.sharing.group_key,
                    'location': loc}
         try:
             self._socket.send(json.dumps(message))

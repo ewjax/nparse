@@ -3,7 +3,6 @@ gtts>=2.2.2
 pyInstaller
 concurrent_log_handler
 websockets
-websocket-client
+websocket-client>=0.58.0
 requests
-websocket
 colorhash
