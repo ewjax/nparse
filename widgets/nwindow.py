@@ -27,6 +27,7 @@ class NWindow(QFrame):
         self.setStyleSheet(styles.parser_window())
         if self.transparent:
             self.setAttribute(Qt.WA_TranslucentBackground, True)
+        self.clickthrough = False
 
         # Base Layout
         layout = QVBoxLayout()
@@ -73,15 +74,18 @@ class NWindow(QFrame):
     def parse(self, timestamp, text):
         pass
 
-    def set_flags(self):
+    def set_flags(self, force_clickable=False):
         self.setFocus()
-        self.setWindowFlags(
+        flags = (
             Qt.SubWindow
             | Qt.FramelessWindowHint
             | Qt.WindowStaysOnTopHint
             | Qt.WindowCloseButtonHint
             | Qt.WindowMinMaxButtonsHint
         )
+        if self.clickthrough and not force_clickable:
+            flags |= Qt.WindowTransparentForInput
+        self.setWindowFlags(flags)
         self.show()
 
     def load(self):
@@ -138,7 +142,7 @@ class NWindow(QFrame):
     def unlock(self):
         self._locked = False
         self.toggle_transparency(False)
-        self.set_flags()  # ensure it is ontop
+        self.set_flags(force_clickable=True)  # ensure it is ontop
         # swap current layout for move layout
         self._unlocked_stack.show_grip()
         self._stack.setCurrentWidget(self._unlocked_stack)

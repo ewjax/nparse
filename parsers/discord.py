@@ -44,6 +44,9 @@ class Discord(NWindow):
 
     def __init__(self):
         super().__init__(name="discord")
+        self.set_title(self.name.title())
+        self.setAttribute(QtCore.Qt.WA_TranslucentBackground, True)
+        self.clickthrough = True
 
         # ui
         self.setMinimumWidth(125)
@@ -65,12 +68,8 @@ class Discord(NWindow):
             self.overlay.page().runJavaScript(js)
 
     def _setup_webview(self):
-        setup_button = QPushButton('\u2699')
-        setup_button.clicked.connect(self.show_settings)
-        self.menu_area.addWidget(setup_button)
-
         self.overlay = QWebEngineView()
-        self.overlay.page().setBackgroundColor(QtCore.Qt.black)
+        self.overlay.page().setBackgroundColor(QtCore.Qt.transparent)
         self.overlay.setAttribute(QtCore.Qt.WA_TranslucentBackground, True)
         self.overlay.setAttribute(QtCore.Qt.WA_TransparentForMouseEvents, True)
         if self.url:
@@ -82,7 +81,7 @@ class Discord(NWindow):
         scroll_area = QScrollArea()
         scroll_area.setWidgetResizable(True)
         scroll_area.setWidget(self.overlay)
-        scroll_area.setObjectName('DiscordScrollArea')
+        scroll_area.setObjectName("DiscordScrollArea")
         scroll_area.setFrameStyle(0)
         self.content.addWidget(scroll_area, 1)
 
@@ -166,3 +165,9 @@ class Discord(NWindow):
 
     def parse(self, timestamp, text):
         pass
+
+    def settings_updated(self):
+        super().settings_updated()
+
+    def toggle_menu(self, on=True):
+        pass  # do not use menu

@@ -203,6 +203,8 @@ class NomnsParse(QApplication):
         menu.addSeparator()
         settings_action = menu.addAction("Settings")
 
+        config_discord_action = menu.addAction("Configure Discord")
+
         lock_toggle = menu.addAction(
             "Unlock Windows" if self._locked else "Lock Windows"
         )
@@ -244,6 +246,9 @@ class NomnsParse(QApplication):
                     self._settings.set_values()  # revert values
             else:
                 self._settings.activateWindow()
+
+        elif action == config_discord_action:
+            self._parsers[2].show_settings()
 
         elif action == quit_action:
             if self._toggled:
