@@ -61,7 +61,6 @@ coverage.xml
 docs/_build/
 
 # nParse
-
 old/
 nparse.config.json
 nparse.triggers.json
@@ -69,5 +68,6 @@ data/tts/*
 data/logs
 data/profiles
 data/triggers
+test/data
 /venv/
 

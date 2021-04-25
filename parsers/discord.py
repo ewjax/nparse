@@ -35,8 +35,9 @@ CSS_SMALLER_AVATARS = (
 )
 HTML_NO_CONFIG = """
 <html><font color='lightgrey' size='5px'>
-Hover this window and click the gear icon to configure your Discord overlay.
-</font></html>"""
+Configure your Discord overlay by clicking on the nParse system tray icon and
+selecting `Configure Discord`.
+</font></html>""".replace('\n', ' ')
 
 
 class Discord(NWindow):

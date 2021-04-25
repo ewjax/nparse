@@ -47,7 +47,7 @@ from config.ui import SettingsWindow
 os.environ["QT_SCALE_FACTOR"] = str(app_config.qt_scale_factor / 100)
 
 # update check
-CURRENT_VERSION: str = "1.0.0-rc1"
+CURRENT_VERSION: str = "1.0.0-rc2"
 if app_config.update_check:
     ONLINE_VERSION: str = get_version()
 else:
@@ -134,6 +134,8 @@ class NomnsParse(QApplication):
         self._settings.reject()
         profile.switch(os.path.basename(log_file))
         app_config.last_profile = os.path.basename(log_file)
+        self._settings.set_values()
+        self._settings.save_settings()
         self.update()
 
     def update(self):

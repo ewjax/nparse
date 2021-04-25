@@ -21,7 +21,8 @@ class SettingsWindow(QDialog):
 
     def selectEQDirectoryButtonClicked(self) -> None:
         dir_path = str(
-            QFileDialog.getExistingDirectory(None, "Select Everquest Directory")
+            QFileDialog.getExistingDirectory(None, "Select Everquest Directory",
+                                             directory=app_config.eq_dir)
         )
         if dir_path:
             self.eqDirectoryLabel.setText(dir_path)

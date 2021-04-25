@@ -18,7 +18,7 @@ from gtts import gTTS
 
 from utils import logger
 
-log = logger.get_logger(__name__)
+LOG = logger.get_logger(__name__)
 
 
 @dataclass
@@ -76,7 +76,7 @@ def get_version():
         r = requests.get("http://nparse.nomns.com/info/version")
         version = json.loads(r.text)["version"]
     except:
-        log.warning("Unable to get version from server.", exc_info=True)
+        LOG.warning("Unable to get version from server.", exc_info=True)
     return version
 
 
@@ -85,15 +85,15 @@ def is_new_version_available(new_version: str, old_version: str) -> bool:
         return Version(new_version) > Version(old_version)
     except:
         return False
-        log.warning(f"Unable to parse versions: {new_version} and {old_version}")
+        LOG.warning(f"Unable to parse versions: {new_version} and {old_version}")
 
 
 def parse_name_from_log(log_file: str):
     r = re.search("^eqlog_(?P<name>\w+)_(?P<server>\w+).txt", log_file)
     try:
-        return r.group("name")
+        return r.group("name"), r.group("server")
     except:
-        log.warning(f"Unable to parse name from {log_file}.")
+        LOG.warning(f"Unable to parse name from {log_file}.")
         return None
 
 

@@ -37,25 +37,42 @@ class Config:
             log.warning("Unable to save data/nparse.config.json", exc_info=True)
 
     def verify_paths(self):
-        # verify Everquest Directory Exists
-        try:
-            assert os.path.isdir(os.path.join(self.eq_dir))
-        except:
-            raise ValueError(
-                "Everquest Directory Error",
-                (
-                    "Everquest directory needs to be set before proceeding. "
-                    "Use Settings->General->Everquest Directory to set it."
-                ),
-            )
+        # verify Everquest Directory Exists (try some common paths)
+        for dir in (self.eq_dir,
+                    os.path.join("c:\\", "everquest"),
+                    os.path.join("c:\\", "program files", "everquest"),
+                    os.path.join("c:\\", "program files (x86)", "everquest"),
+                    os.path.join("d:\\", "everquest"),
+                    os.path.join("d:\\", "program files", "everquest"),
+                    os.path.join("d:\\", "program files (x86)", "everquest")):
+            # verify eq log directory contains log files for reading.
+            log_filter = os.path.join(dir, "Logs", "eqlog*.*")
+            if glob.glob(log_filter):
+                # Found path, set and return
+                self.eq_dir = dir
+                return
+            else:
+                # Check if they selected the Log directory (old style config)
+                path_parts = os.path.split(dir)
+                if path_parts[-1].lower() == 'logs':
+                    log_filter = os.path.join(dir, "eqlog*.*")
+                    if glob.glob(log_filter):
+                        self.eq_dir = os.path.join(*path_parts[:-1])
+                        return
 
-        # verify eq log directory contains log files for reading.
-        log_filter = os.path.join(self.eq_dir, "Logs", "eqlog*.*")
-        if not glob.glob(log_filter):
-            raise ValueError(
-                "No Logs Found",
-                (
-                    "No Everquest log files were found.  Ensure both your directory is set "
-                    "and logging is turned on in your Everquest client."
-                ),
-            )
+            if os.path.isdir(os.path.join(dir)):
+                # Directory exists, but no logs are in it
+                raise ValueError(
+                    "No Logs Found",
+                    (
+                        "No Everquest log files were found.  Ensure both your directory is set "
+                        "and logging is turned on in your Everquest client."
+                    ),
+                )
+        raise ValueError(
+            "Everquest Directory Error",
+            (
+                "Everquest directory needs to be set before proceeding. "
+                "Use Settings->General->Everquest Directory to set it."
+            ),
+        )

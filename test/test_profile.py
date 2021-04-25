@@ -38,8 +38,7 @@ class TestProfile(unittest.TestCase):
             self.assertNotEqual(test_profile, Profile())
 
     def test_save(self, delete: bool = True):
-        test_profile = Profile(log_file="__testing__")
-        test_profile.name = "Leela"
+        test_profile = Profile(log_file="eqlog_Leela_project1999.txt")
         profile_path = os.path.join("data/profiles", f"{test_profile.log_file}.json")
         test_profile.save()
         self.assertTrue(os.path.exists(profile_path))
@@ -49,7 +48,7 @@ class TestProfile(unittest.TestCase):
     def test_load(self):
         self.test_save(delete=False)
         test_profile = Profile()
-        test_profile.load("__testing__")
+        test_profile.load("eqlog_Leela_project1999.txt")
         profile_path = os.path.join("data/profiles", f"{test_profile.log_file}.json")
         self.assertIsInstance(test_profile, Profile)
         self.assertEqual(test_profile.name, "Leela")

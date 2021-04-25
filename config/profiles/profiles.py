@@ -10,7 +10,7 @@ from ..triggers.trigger import TriggerChoice
 
 log = logger.get_logger(__name__)
 
-PROFILES_LOCATION = "./data/profiles"
+PROFILES_LOCATION = os.path.join("data", "profiles")
 
 
 @dataclass
@@ -37,7 +37,7 @@ class ProfileSharing:
     player_name: str = "ConfigureMe"
     url: str = "ws://sheeplauncher.net:8424"
     reconnect_delay: int = 5
-    enabled: bool = False
+    enabled: bool = True
     group_key: str = "public"
     discord_channel: bool = False
 
@@ -93,6 +93,7 @@ class ProfileTriggers:
 @dataclass
 class Profile:
     name: str = ""  # blank name means profile will not save.
+    server: str = ""
     log_file: str = ""
     maps: ProfileMaps = field(default_factory=lambda: ProfileMaps())
     sharing: ProfileSharing = field(default_factory=lambda: ProfileSharing())
@@ -103,10 +104,9 @@ class Profile:
     trigger_choices: List[TriggerChoice] = field(default_factory=lambda: [])
 
     def __post_init__(self):
-        if not os.path.exists(PROFILES_LOCATION):
-            os.mkdir(PROFILES_LOCATION)
+        os.makedirs(PROFILES_LOCATION, exist_ok=True)
         if self.log_file and not self.name:
-            self.name = parse_name_from_log(self.log_file)
+            self.name, self.server = parse_name_from_log(self.log_file)
 
     def switch(self, log_file: str) -> None:
         self.save()
@@ -128,7 +128,9 @@ class Profile:
             log.info(f"Creating new log for {log_file}")
             profile.update(asdict(self))
             profile.log_file = log_file
-            profile.name = parse_name_from_log(log_file)
+            profile.name, profile.server = parse_name_from_log(log_file)
+            profile.sharing.player_name = profile.name
+            profile.sharing.group_key = profile.server
         self.update(asdict(profile))
         self.spells.sound_data = mp3_to_data(profile.spells.sound_file)
 

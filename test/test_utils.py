@@ -5,7 +5,10 @@ from utils import parse_name_from_log, is_new_version_available, searches
 
 class TestUtil(unittest.TestCase):
     def test_parse_name_from_log(self):
-        self.assertIsInstance(parse_name_from_log("eqlog_Nomns_project1999.txt"), str)
+        name, server = parse_name_from_log("eqlog_Nomns_project1999.txt")
+        self.assertIsInstance(name, str)
+        self.assertEqual(name, "Nomns")
+        self.assertEqual(server, "project1999")
 
     def test_is_new_version_available(self):
         self.assertTrue(

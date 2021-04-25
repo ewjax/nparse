@@ -7,8 +7,7 @@ import os
 
 def get_logger(name: str = "general") -> logging.Logger:
     # ensure log directory exists. if not, create it
-    if not os.path.exists("./data/logs"):
-        os.mkdir("./data/logs")
+    os.makedirs(os.path.join("data", "logs"), exist_ok=True)
     log = logging.getLogger(name)
     log.setLevel(logging.INFO)
     h = ConcurrentRotatingFileHandler(
