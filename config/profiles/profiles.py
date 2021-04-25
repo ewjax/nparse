@@ -133,9 +133,10 @@ class Profile:
             profile.sharing.player_name = profile.name
             profile.sharing.group_key = profile.server
             profile.sharing.enabled = True
-            SIGNALS.config_updated.emit()
+
         self.update(asdict(profile))
         self.spells.sound_data = mp3_to_data(profile.spells.sound_file)
+        SIGNALS.config_updated.emit()
 
     def save(self) -> None:
         try:

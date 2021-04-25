@@ -50,7 +50,10 @@ def config_updated():
     lsc.enabled = profile.sharing.enabled
     lsc.host = profile.sharing.url
     lsc.reconnect_delay = profile.sharing.reconnect_delay
-    lsc.configure_socket()
+    try:
+        lsc._socket.close()
+    except:
+        pass
 
 
 class LocationServiceConnection(QRunnable):

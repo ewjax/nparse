@@ -204,16 +204,22 @@ class SettingsWindow(QDialog):
         )
 
         # Sharing
-        sharing_was_enabled = profile.sharing.enabled
+        old_sharing_dict = profile.sharing.__dict__.copy()
         profile.sharing.enabled = self.enableSharingCheckbox.isChecked()
-        if profile.sharing.enabled != sharing_was_enabled:
-            SIGNALS.config_updated.emit()
-
         profile.sharing.player_name = self.displayNameEditor.text()
         profile.sharing.url = self.sharingHostnameEditor.text()
         profile.sharing.group_key = self.groupKeyEditor.text()
         profile.sharing.discord_channel = self.useDiscordChannelCheckbox.isChecked()
         profile.sharing.reconnect_delay = self.reconnectDelaySpinbox.value()
+        if (
+                profile.sharing.enabled != old_sharing_dict['enabled'] or
+                profile.sharing.group_key != old_sharing_dict['group_key'] or
+                profile.sharing.player_name != old_sharing_dict['player_name'] or
+                profile.sharing.url != old_sharing_dict['url'] or
+                profile.sharing.discord_channel != old_sharing_dict['discord_channel'] or
+                profile.sharing.reconnect_delay != old_sharing_dict['reconnect_delay']
+        ):
+            SIGNALS.config_updated.emit()
 
         # Text
 
