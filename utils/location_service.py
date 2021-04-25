@@ -2,24 +2,18 @@ import json
 import ssl
 import time
 
-from PyQt5.QtCore import QObject, QRunnable, pyqtSignal, pyqtSlot
+from PyQt5.QtCore import QRunnable, pyqtSlot
 from PyQt5.QtCore import QThreadPool
 import websocket
 
 from config import profile
 from utils import logger
+from utils.signals import SIGNALS
 
 LOG = logger.get_logger(__name__)
 
 
-class LocationSignals(QObject):
-    locs_recieved = pyqtSignal(dict)
-    send_loc = pyqtSignal(dict)
-    config_updated = pyqtSignal()
-
-
 RUN = True
-SIGNALS = LocationSignals()
 THREADPOOL = QThreadPool()
 _LSC = None
 
@@ -88,7 +82,7 @@ class LocationServiceConnection(QRunnable):
                 on_error=self._on_error, on_close=self._on_close,
                 on_open=self._on_open)
         else:
-            LOG.info("Sharing disabled.")
+            LOG.debug("Sharing disabled.")
 
     @pyqtSlot()
     def run(self):

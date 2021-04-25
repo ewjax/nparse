@@ -5,6 +5,7 @@ from datetime import datetime
 import json
 
 from utils import logger, mp3_to_data, parse_name_from_log, searches
+from utils.signals import SIGNALS
 
 from ..triggers.trigger import TriggerChoice
 
@@ -37,7 +38,7 @@ class ProfileSharing:
     player_name: str = "ConfigureMe"
     url: str = "ws://sheeplauncher.net:8424"
     reconnect_delay: int = 5
-    enabled: bool = True
+    enabled: bool = False
     group_key: str = "public"
     discord_channel: bool = False
 
@@ -131,6 +132,8 @@ class Profile:
             profile.name, profile.server = parse_name_from_log(log_file)
             profile.sharing.player_name = profile.name
             profile.sharing.group_key = profile.server
+            profile.sharing.enabled = True
+            SIGNALS.config_updated.emit()
         self.update(asdict(profile))
         self.spells.sound_data = mp3_to_data(profile.spells.sound_file)
 

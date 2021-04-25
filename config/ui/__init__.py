@@ -6,7 +6,8 @@ import os
 from glob import glob
 
 from utils import (resource_path, set_qcolor, get_rgb, sound, create_tts_mp3,
-                   mp3_to_data, location_service)
+                   mp3_to_data)
+from utils.signals import SIGNALS
 from config import profile, app_config, trigger_manager
 
 from .triggertree import TriggerTree
@@ -206,7 +207,7 @@ class SettingsWindow(QDialog):
         sharing_was_enabled = profile.sharing.enabled
         profile.sharing.enabled = self.enableSharingCheckbox.isChecked()
         if profile.sharing.enabled != sharing_was_enabled:
-            location_service.SIGNALS.config_updated.emit()
+            SIGNALS.config_updated.emit()
 
         profile.sharing.player_name = self.displayNameEditor.text()
         profile.sharing.url = self.sharingHostnameEditor.text()

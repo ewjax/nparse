@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import QHBoxLayout, QPushButton
 from PyQt5.QtCore import Qt
 
 from utils import logger, to_real_xy, location_service
+from utils.signals import SIGNALS
 from widgets import NWindow
 from config import profile
 
@@ -92,7 +93,7 @@ class Maps(NWindow):
                     'player': profile.sharing.player_name,
                     'timestamp': timestamp.isoformat()
                 }
-                location_service.SIGNALS.send_loc.emit(share_payload)
+                SIGNALS.send_loc.emit(share_payload)
         elif text[:16] == "start_recording_":
             recording_name = text.split()[0][16:]
             if recording_name:
