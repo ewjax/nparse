@@ -77,14 +77,20 @@ class Discord(NWindow):
             self.overlay.loadFinished.connect(self._applyTweaks)
             self.overlay.load(QtCore.QUrl(self.url))
         else:
+            self.overlay.loadFinished.connect(self._applyTweaks)
             self.overlay.setHtml(HTML_NO_CONFIG)
+        # self.overlay.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        # self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        # self.overlay.page().mainFrame().setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        # self.overlay.setZoomFactor(0.6)
+        page = self.overlay.page()
 
-        scroll_area = QScrollArea()
-        scroll_area.setWidgetResizable(True)
-        scroll_area.setWidget(self.overlay)
-        scroll_area.setObjectName("DiscordScrollArea")
-        scroll_area.setFrameStyle(0)
-        self.content.addWidget(scroll_area, 1)
+        # scroll_area = QScrollArea()
+        # scroll_area.setWidgetResizable(True)
+        # scroll_area.setWidget(self.overlay)
+        # scroll_area.setObjectName("DiscordScrollArea")
+        # scroll_area.setFrameStyle(0)
+        self.content.addWidget(self.overlay, 1)
 
     def show_settings(self):
         if self.settings_dialog:

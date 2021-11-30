@@ -121,6 +121,8 @@ class Spells(NWindow):
                 for spell_widget in spell_target.timers():
                     spell_widget.elongate(delay)
                     spell_widget.resume()
+        elif self._zoning and text[:21] == "Welcome to EverQuest!":
+            self._zoning = None
 
     def _remove_spell_trigger(self):
         if self._spell_trigger:
