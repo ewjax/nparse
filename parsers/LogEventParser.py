@@ -33,6 +33,7 @@ rsyslog_servers = {'server1': '192.168.1.127:514',
 # gmotd_event = True, server1, server2, server3
 # tod_lowfidelity_event = True, server1, server2, server3
 # tod_highfidelity_event = True, server1, server2, server3
+# ping_event = True, server1, server2, server3
 
 # todo - replace this global with info from config file
 parser_config_dict = {'VesselDrozlin_Event': 'True, server1, server2, server3',
@@ -49,7 +50,9 @@ parser_config_dict = {'VesselDrozlin_Event': 'True, server1, server2, server3',
                       'Gratss_Event': 'True, server1, server2, server3',
                       'TOD_LowFidelity_Event': 'True, server1, server2, server3',
                       'GMOTD_Event': 'True, server1, server2, server3',
-                      'TOD_HighFidelity_Event': 'True, server1, server2, server3'}
+                      'TOD_HighFidelity_Event': 'True, server1, server2, server3',
+                      'Ping_Event': 'True, server1, server2, server3'}
+
 
 #
 # create a global list of parsers
@@ -70,6 +73,7 @@ log_event_list = [
     TOD_LowFidelity_Event(),
     GMOTD_Event(),
     TOD_HighFidelity_Event(),
+    Ping_Event(),
 ]
 
 

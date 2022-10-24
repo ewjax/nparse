@@ -21,6 +21,7 @@ LOGEVENT_GRATSS: int = 12
 LOGEVENT_TODLO: int = 13
 LOGEVENT_GMOTD: int = 14
 LOGEVENT_TODHI: int = 15
+LOGEVENT_PING: int = 16
 
 
 #########################################################################################################################
@@ -682,4 +683,18 @@ class GMOTD_Event(LogEvent):
         self.short_description = 'GMOTD'
         self._search_list = [
             '^GUILD MOTD:',
+        ]
+
+
+class Ping_Event(LogEvent):
+    """
+    Parser for Ping messages
+    """
+
+    def __init__(self):
+        super().__init__()
+        self.log_event_ID = LOGEVENT_PING
+        self.short_description = '.ping'
+        self._search_list = [
+            '^\\.ping',
         ]
